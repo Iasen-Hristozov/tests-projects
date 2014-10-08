@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="security-test" default="all">
+	
+	<property name="src" value="${basedir}/src" />
+	<property name="build" value="${basedir}/build" />
+	
+	<target name="prepare">
+		<mkdir dir="${build}" />
+	</target>
+	
+	<target name="clean">
+		<delete dir="${build}" />
+		<delete file="main.jar" />
+		<delete file="rogue.jar" />
+		<delete file="authorized.jar" />
+	</target>
+	
+	<target name="all" depends="make-all-jars" />
+	
+	<target name="make-all-jars" depends="make-main-jar, make-authorized-jar, make-rogue-jar" />
+	
+	<target name="compile-main" depends="prepare">
+		<javac destdir="${build}" srcdir="${src}/main" />
+	</target>
+	
+	<target name="make-main-jar" depends="compile-main">
+		<jar destfile="main.jar" basedir="${build}" includes="main/*">
+			<manifest>
+				<attribute name="Main-Class" value="main.Main" />
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="compile-authorized" depends="prepare">
+		<javac destdir="${build}" srcdir="${src}/plugins/authorized" />
+	</target>
+	
+	<target name="make-authorized-jar" depends="compile-authorized">
+		<jar destfile="authorized.jar" basedir="${build}" includes="plugins/authorized/" />
+	</target>
+	
+	<target name="compile-rogue" depends="prepare">
+		<javac destdir="${build}" srcdir="${src}/plugins/rogue" />
+	</target>
+	
+	<target name="make-rogue-jar" depends="compile-rogue">
+		<jar destfile="rogue.jar" basedir="${build}" includes="plugins/rogue/" />
+	</target>
+	
+</project>
