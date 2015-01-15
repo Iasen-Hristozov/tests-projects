@@ -1,4 +1,4 @@
-package com.esd.rtmpdump;
+package com.esd.slavishowrtmpdump;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
