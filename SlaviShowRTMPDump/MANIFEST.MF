@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: com.esd.slavishowrtmpdump.SlaviShowRTMPDump
+Specification-Version: 2.1
+Implementation-Version: 1.1

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="slavi-show-rtmp-dump" default="entry">
+    
+	<property name="prj-name" value="SlaviShowRTMPDump" />
+	<property file="${prj-name}.properties" />
+   <property name="src" value="${basedir}/src" />
+	<!--<property name="dst" value="${basedir}/bin/" />-->
+	<property name="dst" value="${basedir}/" />
+   <property name="build" value="${basedir}/build" />
+	<property name="builder" value="Discworld" />
+	
+	<!--<property name="plugin-name" value="ABCDisk" />-->
+	<!--<property name="major-version-number" value="1" />-->
+	
+	<tstamp prefix="build-info">
+	      <format property="current-date" pattern="d-MMMM-yyyy" locale="en" />
+	      <format property="current-time" pattern="HH:mm:ss z" locale="en" />
+	      <format property="year-month-day" pattern="yyyy-MM-dd" locale="en" />
+   </tstamp>	
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: entry                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="entry">
+    	<antcall target="make-jar"/>
+    	<antcall target="clear"/>
+    </target>
+
+	
+   <target name="prepare">
+   	<delete dir="${build}" />
+      <mkdir dir="${build}" />
+   </target>
+	
+   <target name="compile" depends="prepare" >
+      <javac destdir="${build}" srcdir="${src}/com/esd/slavishowrtmpdump/" includeantruntime="true">
+      	<include name="SlaviShowRTMPDump.java"/>
+      	</javac>
+   </target>
+
+   <target name="make-jar" depends="compile">
+      <buildnumber file="${prj-name}.number"/>
+      <property name="version-number" value="${major-version-number}.${build.number}" />
+      <jar destfile="${dst}${prj-name}.jar" basedir="${build}" includes="com/esd/slavishowrtmpdump/*">
+         <manifest>
+         	<attribute name="Main-Class" value="com.esd.slavishowrtmpdump.SlaviShowRTMPDump" />
+            <attribute name="Built-By" value="${builder}" />
+            <attribute name="Built-On" value="${build-info.current-date}" />
+            <attribute name="Built-At" value="${build-info.current-time}" />
+            <attribute name="Implementation-Version" value="${version-number}" />
+         </manifest>       
+      </jar>	
+
+   </target>
+	
+   <target name="clear" depends="make-jar">
+   	<delete dir="${build}" />
+   </target>
+
+</project>
