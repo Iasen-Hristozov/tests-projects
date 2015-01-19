@@ -41,6 +41,7 @@ import javax.swing.BoxLayout;
 import javax.swing.text.BadLocationException;
 
 import java.awt.Font;
+
 import javax.swing.ImageIcon;
 
 public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorListener
@@ -52,15 +53,17 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
 
    private final static String MP4_BGN = "\"url\":\"slavishow/",
                                MP4_END = "\",",
-                               URL_ENC_BGN = "<div class=\"fb-like\" data-href=\"",
-                               URL_ENC_END = "\"",
+//                               URL_ENC_BGN = "<div class=\"fb-like\" data-href=\"",
+//                               URL_ENC_END = "\"",
                                NAME_BGN = "www.slavishow.com/",
                                NAME_END = "/",
                                RTMP_DUMP_CMD = "rtmpdump.exe -v -r \"rtmp://video.slavishow.com/slavishow/\" -a \"slavishow/\" -f \"WIN 13,0,0,214\" -W \"http://www.slavishow.com/content/themes/slavishow/swf/flowplayer.commercial-3.2.18.swf\" -p \"%s\" -y \"slavishow/%s\" --tcUrl \"rtmp://video.slavishow.com/slavishow/\" -R --buffer 2000 -o \"%s%s.flv\"",
 //                               RTMP_DUMP_PATH = "D:\\Iasen\\Documents\\Tools\\rtmpdump-2.4-git-010913-windows\\",
                                RTMP_DUMP_PATH = "",
+//                               DWN_PATH = "D:\\",
                                PRG_PATTERN = "\\d{1,6}\\.\\d{3} kB / \\d{1,3}\\.\\d{2} sec \\(\\d{1,2}\\.\\d{1}%\\)",
-                               DWN_PATH = "D:\\";
+                               DOMAIN = "slavishow.com";
+   
 
    private final static String lat              = "A B V G D E J Z I Y K L M N O P R S T U F H C Ch Sh Sht Y Yu Ya a b v g d e j z i y k l m n o p r s t u f h c ch sh sht y y yu ya";
 
@@ -99,19 +102,11 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
             {
                Package p = this.getClass().getPackage();
                sVersion = p.getImplementationVersion();
-//               System.out.println("Hello Specification Version : " + p.getImplementationVersion());         
                
                new SlaviShowRTMPDump();
                
-//               Runtime.getRuntime().addShutdownHook(new Thread()
-//               {
-//                   @Override
-//                   public void run()
-//                   {
-//                      System.out.println("ShutDown");
-//                   }
-//               });      
-            } catch(Exception e)
+            } 
+            catch(Exception e)
             {
                e.printStackTrace();
             }
@@ -122,8 +117,8 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
 
    public SlaviShowRTMPDump()
    {
-
       super("Slavi Show RTMPDump Tool " + sVersion);
+      
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //      Container container = this.getContentPane();
 
@@ -132,16 +127,15 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
       JPanel panel = new JPanel();
       getContentPane().add(panel, BorderLayout.NORTH);
       panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-      // winter.addItemListener(this);
 
       txtURL = new JTextField();
       txtURL.setFont(new Font("Courier New", Font.PLAIN, 11));
-//      txtURL.setText("http://www.slavishow.com/крисия-тодорова-simply-the-best/");
+//      txtURL.setText("http://www.slavishow.com/\u043a\u0440\u0438\u0441\u0438\u044f-\u0442\u043e\u0434\u043e\u0440\u043e\u0432\u0430-simply-the-best/");
       panel.add(txtURL);
       txtURL.setColumns(10);
 
       btnGet = new JButton("");
-      btnGet.setIcon(new ImageIcon(SlaviShowRTMPDump.class.getResource("/icons/1421681121_player_play.png")));
+      btnGet.setIcon(new ImageIcon(SlaviShowRTMPDump.class.getResource("/icons/play.png")));
       btnGet.addActionListener(this);
       
       panel.add(btnGet);
@@ -155,24 +149,24 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
                                                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
       getContentPane().add(scrollPane);
 
-      oClipboard = getSystemClipboard();  
-      
       this.setSize(350, 300);
       this.setVisible(true);
+
+      oClipboard = getSystemClipboard();
+      flavorsChanged(null);
       
       Runtime.getRuntime().addShutdownHook(new Thread()
       {
           @Override
           public void run()
           {
-             System.out.println("ShutDown");
+//             System.out.println("ShutDown");
              
 //             if(oRTMPDumpThread != null && oRTMPDumpThread.isAlive())
              if(bIsStarted)
              {
                 vStop();
 //                oRTMPDumpThread.interrupt();
-//                oRTMPDumpThread.stopRunning();
              }
           }
       });      
@@ -188,11 +182,15 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
       {
          if(!bIsStarted)
          {
+            String sURL = txtURL.getText();
+            if(!sURL.contains(DOMAIN))
+               return;
+            
             bIsStarted = true;
             
-            btnGet.setIcon(new ImageIcon(SlaviShowRTMPDump.class.getResource("/icons/1421681416_player_stop.png")));
+            btnGet.setIcon(new ImageIcon(SlaviShowRTMPDump.class.getResource("/icons/stop.png")));
             
-            String sURL = txtURL.getText();
+            
 
             int iNameBgn = sURL.indexOf(NAME_BGN);
             int iNameEnd = sURL.indexOf(NAME_END, iNameBgn + NAME_BGN.length());
@@ -250,7 +248,7 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
 
                sRTMPDump = RTMP_DUMP_PATH + sRTMPDumpCmd;
 
-               System.out.println(sRTMPDump);
+//               System.out.println(sRTMPDump);
 
                oPattern = Pattern.compile(PRG_PATTERN);
 
@@ -278,7 +276,7 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
          else
          {
             bIsStarted = false;
-            btnGet.setIcon(new ImageIcon(SlaviShowRTMPDump.class.getResource("/icons/1421681121_player_play.png")));
+            btnGet.setIcon(new ImageIcon(SlaviShowRTMPDump.class.getResource("/icons/play.png")));
             vStop();
          }
 
@@ -295,8 +293,8 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
           {
               // cast to string
               String s = (String) trans.getTransferData(DataFlavor.stringFlavor);
-              if(s.contains("slavishow.com"))
-              txtURL.setText(s);
+              if(s.contains(DOMAIN))
+                 txtURL.setText(s);
               // only StringSelection can take ownership, i think
 //              StringSelection ss = new StringSelection(s);
               // set content, take ownership
@@ -497,39 +495,6 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
          this.cmd = cmd;
       }
 
-////      @Override
-////      public void destroy()
-////      {
-////         
-////         try
-////         {
-////         Runtime.getRuntime().exec("taskkill /F /IM rtmpdump.exe");
-//////            errorGobbler.interrupt();
-//////            outputGobbler.interrupt();
-//////            p.notify();
-////////            p.destroy();
-////////            p.waitFor();
-//////            System.out.println("ShutDown 1");
-//////            super.destroy();            
-////         } 
-//////         catch(InterruptedException e)
-//////         {
-//////            // TODO Auto-generated catch block
-//////            e.printStackTrace();
-//////         } 
-////      catch(IOException e)
-////         {
-////            // TODO Auto-generated catch block
-////            e.printStackTrace();
-////         }
-//  
-//      }
-      
-//      public void stopRunning()
-//      {
-//         System.out.println("ShutDown 2");
-//      }
-
       public void run()
       {
          try
@@ -548,9 +513,9 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
             outputGobbler.start();
 
             // any error???
-            int exitVal = p.waitFor();
-//            p.wait(10000);
-            System.out.println("ExitValue: " + exitVal);
+            p.waitFor();
+//            int exitVal = p.waitFor();
+//            System.out.println("ExitValue: " + exitVal);
          } 
          catch(IOException ioe)
          {
@@ -559,14 +524,7 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
          catch(InterruptedException e)
          {
             // TODO Auto-generated catch block
-            System.out.println("InterruptedException");
-            p.destroy();
-            
             e.printStackTrace();
-         }
-         finally
-         {
-            System.out.println("ShutDown 1");
          }
       }
    }
