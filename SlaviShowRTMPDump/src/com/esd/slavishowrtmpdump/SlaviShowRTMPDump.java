@@ -65,11 +65,11 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
                                DOMAIN = "slavishow.com";
    
 
-   private final static String lat              = "A B V G D E J Z I Y K L M N O P R S T U F H C Ch Sh Sht Y Yu Ya a b v g d e j z i y k l m n o p r s t u f h c ch sh sht y y yu ya";
+   private final static String lat              = "A B V G D E J Z I Y K L M N O P R S T U F H C Ch Sh Sht Y Yu Ya a b v g d e j z i y k l m n o p r s t u f h c ch sh sht y y y yu ya";
 
    // private final static String cyr =
    // "A Б В Г Д Е Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ю Я а б в г д е ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ь ю я";
-   private final static String cyr              = "\u0410 \u0411 \u0412 \u0413 \u0414 \u0415 \u0416 \u0417 \u0418 \u0419 \u041A \u041B \u041C \u041D \u041E \u041F \u0420 \u0421 \u0422 \u0423 \u0424 \u0425 \u0426 \u0427 \u0428 \u0429 \u042A \u042E \u042F \u0430 \u0431 \u0432 \u0433 \u0434 \u0435 \u0436 \u0437 \u0438 \u0439 \u043A \u043B \u043C \u043D \u043E \u043F \u0440 \u0441 \u0442 \u0443 \u0444 \u0445 \u0446 \u0447 \u0448 \u0449 \u044A \u044C \u044E \u044F";
+   private final static String cyr              = "\u0410 \u0411 \u0412 \u0413 \u0414 \u0415 \u0416 \u0417 \u0418 \u0419 \u041A \u041B \u041C \u041D \u041E \u041F \u0420 \u0421 \u0422 \u0423 \u0424 \u0425 \u0426 \u0427 \u0428 \u0429 \u042A \u042E \u042F \u0430 \u0431 \u0432 \u0433 \u0434 \u0435 \u0436 \u0437 \u0438 \u0439 \u043A \u043B \u043C \u043D \u043E \u043F \u0440 \u0441 \u0442 \u0443 \u0444 \u0445 \u0446 \u0447 \u0448 \u0449 \u044A \u044B \u044C \u044E \u044F";
 
    private boolean                     bIsStarted = false;
    
@@ -559,7 +559,7 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
    
    private void vToggleButton()
    {
-      btnGet.setIcon(new ImageIcon(SlaviShowRTMPDump.class.getResource(bIsStarted ? "/icons/stop.png" : "/icons/play.png")));
       bIsStarted = !bIsStarted;
+      btnGet.setIcon(new ImageIcon(SlaviShowRTMPDump.class.getResource(bIsStarted ? "/icons/stop.png" : "/icons/play.png")));
    }
 }
