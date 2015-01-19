@@ -4,6 +4,7 @@
 	<property name="prj-name" value="SlaviShowRTMPDump" />
 	<property file="${prj-name}.properties" />
    <property name="src" value="${basedir}/src" />
+	<property name="assets" value="${basedir}/assets" />
 	<!--<property name="dst" value="${basedir}/bin/" />-->
 	<property name="dst" value="${basedir}/" />
    <property name="build" value="${basedir}/build" />
@@ -42,6 +43,7 @@
       <buildnumber file="${prj-name}.number"/>
       <property name="version-number" value="${major-version-number}.${build.number}" />
       <jar destfile="${dst}${prj-name}.jar" basedir="${build}" includes="com/esd/slavishowrtmpdump/*">
+      	<fileset dir="${assets}" includes="**"/>
          <manifest>
          	<attribute name="Main-Class" value="com.esd.slavishowrtmpdump.SlaviShowRTMPDump" />
             <attribute name="Built-By" value="${builder}" />

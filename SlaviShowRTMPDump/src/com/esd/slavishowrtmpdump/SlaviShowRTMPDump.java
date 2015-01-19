@@ -41,6 +41,7 @@ import javax.swing.BoxLayout;
 import javax.swing.text.BadLocationException;
 
 import java.awt.Font;
+import javax.swing.ImageIcon;
 
 public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorListener
 {
@@ -67,21 +68,25 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
    // "A Б В Г Д Е Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ю Я а б в г д е ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ь ю я";
    private final static String cyr              = "\u0410 \u0411 \u0412 \u0413 \u0414 \u0415 \u0416 \u0417 \u0418 \u0419 \u041A \u041B \u041C \u041D \u041E \u041F \u0420 \u0421 \u0422 \u0423 \u0424 \u0425 \u0426 \u0427 \u0428 \u0429 \u042A \u042E \u042F \u0430 \u0431 \u0432 \u0433 \u0434 \u0435 \u0436 \u0437 \u0438 \u0439 \u043A \u043B \u043C \u043D \u043E \u043F \u0440 \u0441 \u0442 \u0443 \u0444 \u0445 \u0446 \u0447 \u0448 \u0449 \u044A \u044C \u044E \u044F";
 
-   String                      sRTMPDump;
-
-   static String sVersion;
-
-   JButton                     btnGet;
-
-   JTextArea                   taCommand;
-
-   Pattern                     oPattern;
-
-   Matcher                     oMatcher;
+   private boolean                     bIsStarted = false;
    
-   private Clipboard           oClipboard;
+   private static String               sVersion;
    
-   RTMPDumpThread              oRTMPDumpThread;
+   private String                      sRTMPDump;
+
+   private JButton                     btnGet;
+
+   private JTextArea                   taCommand;
+   
+   private JTextField                  txtURL;
+
+   private Pattern                     oPattern;
+
+   private Matcher                     oMatcher;
+   
+   private Clipboard                   oClipboard;
+   
+   private RTMPDumpThread              oRTMPDumpThread;
 
    public static void main(String[] args)
    {
@@ -114,7 +119,6 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
       });
    }
 
-   private JTextField txtURL;
 
    public SlaviShowRTMPDump()
    {
@@ -136,8 +140,10 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
       panel.add(txtURL);
       txtURL.setColumns(10);
 
-      btnGet = new JButton("Get");
+      btnGet = new JButton("");
+      btnGet.setIcon(new ImageIcon(SlaviShowRTMPDump.class.getResource("/icons/1421681121_player_play.png")));
       btnGet.addActionListener(this);
+      
       panel.add(btnGet);
 
       taCommand = new JTextArea(0, 20);
@@ -161,9 +167,11 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
           {
              System.out.println("ShutDown");
              
-             if(oRTMPDumpThread != null && oRTMPDumpThread.isAlive())
+//             if(oRTMPDumpThread != null && oRTMPDumpThread.isAlive())
+             if(bIsStarted)
              {
-                oRTMPDumpThread.interrupt();
+                vStop();
+//                oRTMPDumpThread.interrupt();
 //                oRTMPDumpThread.stopRunning();
              }
           }
@@ -178,88 +186,102 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
 
       if(oSource == btnGet)
       {
-         String sURL = txtURL.getText();
-
-         int iNameBgn = sURL.indexOf(NAME_BGN);
-         int iNameEnd = sURL.indexOf(NAME_END, iNameBgn + NAME_BGN.length());
-         String sName = sURL.substring(iNameBgn + NAME_BGN.length(), iNameEnd);
-
-         try
+         if(!bIsStarted)
          {
-            String sNameEnc = URLEncoder.encode(sName, "UTF-8");
-
-            String sURLEnc = "http://www.slavishow.com/" + sNameEnc + "/";
-
-            String sResponse = getFromURL(sURLEnc);
-
-            int iMP4Bgn = sResponse.indexOf(MP4_BGN);
-            int iMP4End = sResponse.indexOf(MP4_END, iMP4Bgn);
-            String sMP4 = sResponse.substring(iMP4Bgn + MP4_BGN.length(), iMP4End);
-
-            // int iURLEncBgn = sResponse.indexOf(URL_ENC_BGN);
-            // int iURLEncEnd = sResponse.indexOf(URL_ENC_END, iURLEncBgn);
-            // String sURLEnc = sResponse.substring(iURLEncBgn +
-            // URL_ENC_BGN.length(), iURLEncEnd);
-
-            // int iNameBgn = sURL.indexOf(NAME_BGN);
-            // int iNameEnd = sURL.indexOf(NAME_END, iNameBgn);
-            // String sName = sURL.substring(iNameBgn + NAME_BGN.length(),
-            // iNameEnd);
-
-            int iDateEnd = sMP4.indexOf("_");
-
-            String sDate = sMP4.substring(0, iDateEnd);
-
-            sName = sDate + "_" + sName;
-
-            String sNameLat = cyr2lat(sName);
-
-            String sHome = System.getProperty("user.home");
+            bIsStarted = true;
             
-            String sDwnPath; 
+            btnGet.setIcon(new ImageIcon(SlaviShowRTMPDump.class.getResource("/icons/1421681416_player_stop.png")));
             
-            if((new File(sHome + "\\Downloads\\")).exists())
-               sDwnPath = sHome + "\\Downloads\\";
-            else if((new File(sHome + "\\Download\\")).exists())
-               sDwnPath = sHome + "\\Download\\";
-            else
+            String sURL = txtURL.getText();
+
+            int iNameBgn = sURL.indexOf(NAME_BGN);
+            int iNameEnd = sURL.indexOf(NAME_END, iNameBgn + NAME_BGN.length());
+            String sName = sURL.substring(iNameBgn + NAME_BGN.length(), iNameEnd);
+
+            try
             {
-               (new File(sHome + "\\Downloads\\")).createNewFile();
-               sDwnPath = sHome + "\\Downloads\\";               
-            }
+               String sNameEnc = URLEncoder.encode(sName, "UTF-8");
 
-            final String sRTMPDumpCmd = String.format(RTMP_DUMP_CMD, sURLEnc, sMP4, sDwnPath, sNameLat);
-            
-            taCommand.setText(sRTMPDumpCmd);
+               String sURLEnc = "http://www.slavishow.com/" + sNameEnc + "/";
 
-            // command = Runtime.getRuntime().exec("cmd /c " + sRTMPDump);
+               String sResponse = getFromURL(sURLEnc);
 
-            sRTMPDump = RTMP_DUMP_PATH + sRTMPDumpCmd;
+               int iMP4Bgn = sResponse.indexOf(MP4_BGN);
+               int iMP4End = sResponse.indexOf(MP4_END, iMP4Bgn);
+               String sMP4 = sResponse.substring(iMP4Bgn + MP4_BGN.length(), iMP4End);
 
-            System.out.println(sRTMPDump);
+               // int iURLEncBgn = sResponse.indexOf(URL_ENC_BGN);
+               // int iURLEncEnd = sResponse.indexOf(URL_ENC_END, iURLEncBgn);
+               // String sURLEnc = sResponse.substring(iURLEncBgn +
+               // URL_ENC_BGN.length(), iURLEncEnd);
 
-            oPattern = Pattern.compile(PRG_PATTERN);
+               // int iNameBgn = sURL.indexOf(NAME_BGN);
+               // int iNameEnd = sURL.indexOf(NAME_END, iNameBgn);
+               // String sName = sURL.substring(iNameBgn + NAME_BGN.length(),
+               // iNameEnd);
 
-            String cmd[] =
+               int iDateEnd = sMP4.indexOf("_");
+
+               String sDate = sMP4.substring(0, iDateEnd);
+
+               sName = sDate + "_" + sName;
+
+               String sNameLat = cyr2lat(sName);
+
+               String sHome = System.getProperty("user.home");
+               
+               String sDwnPath; 
+               
+               if((new File(sHome + "\\Downloads\\")).exists())
+                  sDwnPath = sHome + "\\Downloads\\";
+               else if((new File(sHome + "\\Download\\")).exists())
+                  sDwnPath = sHome + "\\Download\\";
+               else
+               {
+                  (new File(sHome + "\\Downloads\\")).createNewFile();
+                  sDwnPath = sHome + "\\Downloads\\";               
+               }
+
+               final String sRTMPDumpCmd = String.format(RTMP_DUMP_CMD, sURLEnc, sMP4, sDwnPath, sNameLat);
+               
+               taCommand.setText(sRTMPDumpCmd);
+
+               // command = Runtime.getRuntime().exec("cmd /c " + sRTMPDump);
+
+               sRTMPDump = RTMP_DUMP_PATH + sRTMPDumpCmd;
+
+               System.out.println(sRTMPDump);
+
+               oPattern = Pattern.compile(PRG_PATTERN);
+
+               String cmd[] =
+               {
+                        "cmd",
+                        "/c",
+                        sRTMPDump 
+               };
+
+               oRTMPDumpThread = new RTMPDumpThread(cmd);
+               oRTMPDumpThread.start();
+
+            } 
+            catch(UnsupportedEncodingException e)
             {
-                     "cmd",
-                     "/c",
-                     sRTMPDump 
-            };
-
-            oRTMPDumpThread = new RTMPDumpThread(cmd);
-            oRTMPDumpThread.start();
-
-         } 
-         catch(UnsupportedEncodingException e)
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+            } catch(IOException e)
+            {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+            }             
+         }
+         else
          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-         } catch(IOException e)
-         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-         } 
+            bIsStarted = false;
+            btnGet.setIcon(new ImageIcon(SlaviShowRTMPDump.class.getResource("/icons/1421681121_player_play.png")));
+            vStop();
+         }
+
       }
    }
 
@@ -475,27 +497,33 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
          this.cmd = cmd;
       }
 
-      @Override
-      public void destroy()
-      {
-         
-//         try
-//         {
-            errorGobbler.interrupt();
-            outputGobbler.interrupt();
-            p.notify();
-//            p.destroy();
-//            p.waitFor();
-            System.out.println("ShutDown 1");
-            super.destroy();            
-//         } 
-//         catch(InterruptedException e)
-//         {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//         }
-  
-      }
+////      @Override
+////      public void destroy()
+////      {
+////         
+////         try
+////         {
+////         Runtime.getRuntime().exec("taskkill /F /IM rtmpdump.exe");
+//////            errorGobbler.interrupt();
+//////            outputGobbler.interrupt();
+//////            p.notify();
+////////            p.destroy();
+////////            p.waitFor();
+//////            System.out.println("ShutDown 1");
+//////            super.destroy();            
+////         } 
+//////         catch(InterruptedException e)
+//////         {
+//////            // TODO Auto-generated catch block
+//////            e.printStackTrace();
+//////         } 
+////      catch(IOException e)
+////         {
+////            // TODO Auto-generated catch block
+////            e.printStackTrace();
+////         }
+//  
+//      }
       
 //      public void stopRunning()
 //      {
@@ -533,14 +561,7 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
             // TODO Auto-generated catch block
             System.out.println("InterruptedException");
             p.destroy();
-            try
-            {
-               Runtime.getRuntime().exec("taskkill /F /IM rtmpdump.exe");
-            } catch(IOException e1)
-            {
-               // TODO Auto-generated catch block
-               e1.printStackTrace();
-            }
+            
             e.printStackTrace();
          }
          finally
@@ -564,5 +585,17 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
        {  
            return oClipboard;  
        }  
-   }  
+   }
+   
+   private void vStop()
+   {
+      try
+      {
+         Runtime.getRuntime().exec("taskkill /F /IM rtmpdump.exe");
+      } 
+      catch(IOException e)
+      {
+         e.printStackTrace();
+      }      
+   }
 }
