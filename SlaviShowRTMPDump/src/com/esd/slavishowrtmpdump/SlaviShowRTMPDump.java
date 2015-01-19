@@ -117,7 +117,7 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
 
    public SlaviShowRTMPDump()
    {
-      super("Slavi Show RTMPDump Tool " + sVersion);
+      super("Slavi Show RTMPDump Tool " + (sVersion != null ? sVersion : "" ));
       
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //      Container container = this.getContentPane();
