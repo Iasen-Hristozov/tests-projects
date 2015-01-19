@@ -186,11 +186,7 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
             if(!sURL.contains(DOMAIN))
                return;
             
-            bIsStarted = true;
-            
-            btnGet.setIcon(new ImageIcon(SlaviShowRTMPDump.class.getResource("/icons/stop.png")));
-            
-            
+            vToggleButton();
 
             int iNameBgn = sURL.indexOf(NAME_BGN);
             int iNameEnd = sURL.indexOf(NAME_END, iNameBgn + NAME_BGN.length());
@@ -275,8 +271,8 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
          }
          else
          {
-            bIsStarted = false;
-            btnGet.setIcon(new ImageIcon(SlaviShowRTMPDump.class.getResource("/icons/play.png")));
+            
+            vToggleButton();
             vStop();
          }
 
@@ -526,6 +522,10 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
             // TODO Auto-generated catch block
             e.printStackTrace();
          }
+         finally
+         {
+            vToggleButton();
+         }
       }
    }
 
@@ -555,5 +555,11 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
       {
          e.printStackTrace();
       }      
+   }
+   
+   private void vToggleButton()
+   {
+      btnGet.setIcon(new ImageIcon(SlaviShowRTMPDump.class.getResource(bIsStarted ? "/icons/stop.png" : "/icons/play.png")));
+      bIsStarted = !bIsStarted;
    }
 }
