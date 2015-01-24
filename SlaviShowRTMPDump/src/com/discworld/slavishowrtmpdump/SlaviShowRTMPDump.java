@@ -1,4 +1,4 @@
-package com.esd.slavishowrtmpdump;
+package com.discworld.slavishowrtmpdump;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;

@@ -1,4 +1,4 @@
-package com.esd.slavishowrtmpdump;
+package com.discworld.slavishowrtmpdump;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;

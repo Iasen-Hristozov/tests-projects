@@ -30,7 +30,7 @@
    </target>
 	
    <target name="compile" depends="prepare" >
-      <javac destdir="${build}" srcdir="${src}/com/esd/slavishowrtmpdump/" includeantruntime="true">
+      <javac destdir="${build}" srcdir="${src}/com/discworld/slavishowrtmpdump/" includeantruntime="true">
       	<include name="SlaviShowRTMPDump.java"/>
       	</javac>
    </target>
@@ -38,10 +38,10 @@
    <target name="make-jar" depends="compile">
       <buildnumber file="${prj-name}.number"/>
       <property name="version-number" value="${major-version-number}.${build.number}" />
-      <jar destfile="${dst}${prj-name}.jar" basedir="${build}" includes="com/esd/slavishowrtmpdump/*">
+      <jar destfile="${dst}${prj-name}.jar" basedir="${build}" includes="com/discworld/slavishowrtmpdump/*">
       	<fileset dir="${assets}" includes="**"/>
          <manifest>
-         	<attribute name="Main-Class" value="com.esd.slavishowrtmpdump.SlaviShowRTMPDump" />
+         	<attribute name="Main-Class" value="com.discworld.slavishowrtmpdump.SlaviShowRTMPDump" />
             <attribute name="Built-By" value="${builder}" />
             <attribute name="Built-On" value="${build-info.current-date}" />
             <attribute name="Built-At" value="${build-info.current-time}" />
