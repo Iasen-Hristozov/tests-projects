@@ -5,13 +5,9 @@
 	<property file="${prj-name}.properties" />
    <property name="src" value="${basedir}/src" />
 	<property name="assets" value="${basedir}/assets" />
-	<!--<property name="dst" value="${basedir}/bin/" />-->
 	<property name="dst" value="${basedir}/" />
    <property name="build" value="${basedir}/build" />
 	<property name="builder" value="Discworld" />
-	
-	<!--<property name="plugin-name" value="ABCDisk" />-->
-	<!--<property name="major-version-number" value="1" />-->
 	
 	<tstamp prefix="build-info">
 	      <format property="current-date" pattern="d-MMMM-yyyy" locale="en" />
