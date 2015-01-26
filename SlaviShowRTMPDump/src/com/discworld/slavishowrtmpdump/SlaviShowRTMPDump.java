@@ -1,5 +1,6 @@
 package com.discworld.slavishowrtmpdump;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -213,14 +214,19 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
                // iNameEnd);
 
                int iDateEnd = sMP4.indexOf("_");
-
+               
+               if(iDateEnd < 0)
+                  iDateEnd = sMP4.indexOf(".");
+                  
                String sDate = sMP4.substring(0, iDateEnd);
 
                sName = sDate + "_" + sName;
 
                String sNameLat = cyr2lat(sName);
 
-               String sHome = System.getProperty("user.home");
+//               String sHome = System.getProperty("user.home");
+               
+               String sHome = new JFileChooser().getFileSystemView().getDefaultDirectory().getParent();
                
                String sDwnPath; 
                
