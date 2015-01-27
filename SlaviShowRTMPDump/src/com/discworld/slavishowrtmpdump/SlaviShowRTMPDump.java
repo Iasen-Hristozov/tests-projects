@@ -13,6 +13,7 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.FlavorEvent;
 import java.awt.datatransfer.FlavorListener;
@@ -88,6 +89,8 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
    
    private Clipboard                   oClipboard;
    
+   private ClipboardListener           oClipboardListener;
+   
    private RTMPDumpThread              oRTMPDumpThread;
 
    public static void main(String[] args)
@@ -151,8 +154,26 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
       this.setSize(350, 300);
       this.setVisible(true);
 
-      oClipboard = getSystemClipboard();
-      flavorsChanged(null);
+//      oClipboard = getSystemClipboard();
+//      flavorsChanged(null);
+      
+      Runnable checkContent = new Runnable()
+      {
+         
+         @Override
+         public void run()
+         {
+            String sContent = oClipboardListener.getContent();
+            
+            if(sContent.contains(DOMAIN))
+               txtURL.setText(sContent);                  
+         }
+      };
+      
+      oClipboardListener = new ClipboardListener(checkContent);
+      oClipboardListener.itisNotEnough();
+      oClipboardListener.start();
+      
       
       Runtime.getRuntime().addShutdownHook(new Thread()
       {
@@ -533,7 +554,6 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
       }
    }
 
-
    private Clipboard getSystemClipboard() 
    {  
        oClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();  
@@ -554,6 +574,7 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
       try
       {
          Runtime.getRuntime().exec("taskkill /F /IM rtmpdump.exe");
+         oClipboardListener.itisEnough();
       } 
       catch(IOException e)
       {
@@ -566,4 +587,112 @@ public class SlaviShowRTMPDump extends JFrame implements ActionListener, FlavorL
       bIsStarted = !bIsStarted;
       btnGet.setIcon(new ImageIcon(SlaviShowRTMPDump.class.getResource(bIsStarted ? "/icons/stop.png" : "/icons/play.png")));
    }
+
+
+//   @Override
+//   public void lostOwnership(Clipboard arg0, Transferable arg1)
+//   {
+////      try {
+////         this.sleep(20);
+////       } catch(Exception e) {
+////         System.out.println("Exception: " + e);
+////       }
+////       Transferable contents = sysClip.getContents(this);
+////       processContents(contents);
+////       regainOwnership(contents);
+//   }
+   
+//   class ClipboardListener extends Thread implements ClipboardOwner 
+//   {
+//      boolean bEnough=false;
+//
+//      Clipboard sysClip = Toolkit.getDefaultToolkit().getSystemClipboard();
+//      
+//      public void run() 
+//      {
+//         Transferable trans = sysClip.getContents(this);
+//         regainOwnership(trans);
+////         System.out.println("Listening to board...");
+//         while(true) 
+//         {
+//            if(isitEnough())
+//               break;
+//         }
+////         System.out.println("No more Listening...");
+//      }
+//
+//      public void itisEnough()
+//      {
+//         bEnough=true;
+//      }
+//      
+//      public void itisNotEnough()
+//      {
+//         bEnough=false;
+//      }
+//      
+//      boolean isitEnough()
+//      {
+//         return bEnough;
+//      }
+//   
+//      @Override
+//      public void lostOwnership(Clipboard c, Transferable t) 
+//      {
+//         try
+//         {
+//            sleep(200);
+//         }
+//         catch(Exception e)
+//         {
+//            System.out.println("Exception: "+e);
+//         }
+//         
+//         try
+//         {
+//            Transferable contents = c.getContents(this); //EXCEPTION
+//            //processContents(contents);
+//            regainOwnership(contents);
+//         }
+//         catch(Exception e)
+//         {
+//            e.printStackTrace();
+//         }
+//      }
+//
+//      void processContents(Transferable t) 
+//      {
+//         if(isitEnough())
+//            return;
+//      
+//         DataFlavor[] flavors=t.getTransferDataFlavors();
+//         for(int i=flavors.length-1;i>=0;i--)
+//         {
+//            try
+//            {
+//               Object o=t.getTransferData(flavors[i]);
+//               //System.out.println("Flavor "+i+" gives "+o.getClass().getName());
+//               if(o instanceof String)
+//               {
+////                    System.out.println("String="+(String)o);
+//                    if(((String)o).contains(DOMAIN))
+//                       txtURL.setText((String)o);                    
+//                  break;
+//               }
+//            }
+//            catch(Exception exp)
+//            {
+//               exp.printStackTrace();
+//            }
+//         }
+//         //System.out.println("Processing: ");
+//      }
+//
+//      void regainOwnership(Transferable t) 
+//      {
+//         sysClip.setContents(t, this);
+//         processContents(t);
+//      }
+//   }
+   
 }

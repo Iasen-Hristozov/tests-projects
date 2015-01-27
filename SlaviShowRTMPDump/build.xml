@@ -32,6 +32,7 @@
    <target name="compile" depends="prepare" >
       <javac destdir="${build}" srcdir="${src}/com/discworld/slavishowrtmpdump/" includeantruntime="true">
       	<include name="SlaviShowRTMPDump.java"/>
+      	<include name="ClipboardListener.java"/>
       	</javac>
    </target>
 
