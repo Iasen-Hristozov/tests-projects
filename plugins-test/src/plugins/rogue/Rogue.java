@@ -29,11 +29,12 @@ import main.Plugin;
  * 
  * @author David Roden &lt;droden@gmail.com&gt;
  * @version $Id$
+ * 1111
  */
 public class Rogue implements Plugin {
 
 	/**
-	 * Tries to print out the content of the system property “user.home”.
+	 * Tries to print out the content of the system property â€œuser.homeâ€�.
 	 */
 	public void run() {
 		System.out.println(getClass().getName() + ": user.home: " + System.getProperty("user.home"));

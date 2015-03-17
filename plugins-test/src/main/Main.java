@@ -67,7 +67,7 @@ public class Main {
 		System.out.println(authorizedLoader.getClass().toString());
 		Plugin authorizedPlugin = (Plugin) authorizedLoader.loadClass("plugins.authorized.Authorized").newInstance();
 		authorizedPlugin.run();
-
+		//аааа
 		File unauthorizedJarFile = new File("rogue.jar");
 		ClassLoader unauthorizedLoader = URLClassLoader.newInstance(new URL[] { unauthorizedJarFile.toURL() });
 		Plugin unauthorizedPlugin = (Plugin) unauthorizedLoader.loadClass("plugins.rogue.Rogue").newInstance();
