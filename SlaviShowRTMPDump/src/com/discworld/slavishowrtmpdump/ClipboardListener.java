@@ -52,6 +52,7 @@ class ClipboardListener extends Thread implements ClipboardOwner
    public void itisEnough()
    {
       bEnough=true;
+      notify();
    }
    
    public void itisNotEnough()
