@@ -1,10 +1,12 @@
-package com.discworld.jdownloaderx.dto;
+package com.discworld.jdownloaderx;
 
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-public class BookURLsTableModel extends AbstractTableModel
+import com.discworld.jdownloaderx.dto.CFile;
+
+public class FileURLsTableModel extends AbstractTableModel
 {
    /**
     * 
@@ -13,17 +15,17 @@ public class BookURLsTableModel extends AbstractTableModel
    
    private static final String[] names = {"Name", "URL"};
    
-   private Vector<Book> vBooks;
+   private Vector<CFile> vFiles;
    
-   public BookURLsTableModel(Vector<Book> vBooks)
+   public FileURLsTableModel(Vector<CFile> vFiles)
    {
-      this.vBooks = vBooks;
+      this.vFiles = vFiles;
    }
    
    @Override
    public int getRowCount()
    {
-      return vBooks.size();
+      return vFiles.size();
    }
 
    @Override
@@ -38,9 +40,9 @@ public class BookURLsTableModel extends AbstractTableModel
       switch (columnIndex) 
       {
          case 0:
-            return vBooks.get(rowIndex).getName();
+            return vFiles.get(rowIndex).getName();
          case 1:
-            return vBooks.get(rowIndex).getURL();
+            return vFiles.get(rowIndex).getURL();
 //         case 2:
          default:
             return "";
@@ -52,9 +54,9 @@ public class BookURLsTableModel extends AbstractTableModel
        return names[col];
    }
    
-   public void setValues(Vector<Book> vBooks)
+   public void setValues(Vector<CFile> vFiles)
    {
-      this.vBooks = vBooks;
+      this.vFiles = vFiles;
    }
    
 }

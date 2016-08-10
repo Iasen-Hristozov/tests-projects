@@ -1,10 +1,12 @@
-package com.discworld.jdownloaderx.dto;
+package com.discworld.jdownloaderx;
 
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-public class BookDownloadTableModel extends AbstractTableModel
+import com.discworld.jdownloaderx.dto.CFile;
+
+public class FileDownloadTableModel extends AbstractTableModel
 {
    /**
     * 
@@ -13,17 +15,17 @@ public class BookDownloadTableModel extends AbstractTableModel
    
    private static final String[] names = {"Name", "URL", "Progress"};
    
-   private Vector<Book> vBooks;
+   private Vector<CFile> vFiles;
    
-   public BookDownloadTableModel(Vector<Book> vBooks)
+   public FileDownloadTableModel(Vector<CFile> vFiles)
    {
-      this.vBooks = vBooks;
+      this.vFiles = vFiles;
    }
    
    @Override
    public int getRowCount()
    {
-      return vBooks.size();
+      return vFiles.size();
    }
 
    @Override
@@ -38,11 +40,11 @@ public class BookDownloadTableModel extends AbstractTableModel
       switch (columnIndex) 
       {
          case 0:
-            return vBooks.get(rowIndex).getName();
+            return vFiles.get(rowIndex).getName();
          case 1:
-            return vBooks.get(rowIndex).getURL();
+            return vFiles.get(rowIndex).getURL();
          case 2:
-            return vBooks.get(rowIndex).getStatus();
+            return vFiles.get(rowIndex).getStatus();
          default:
             return "";
        }   
@@ -53,32 +55,32 @@ public class BookDownloadTableModel extends AbstractTableModel
        return names[col];
    }
    
-   public void setValues(Vector<Book> vBooks)
+   public void setValues(Vector<CFile> vFiles)
    {
-      this.vBooks = vBooks;
+      this.vFiles = vFiles;
    }
 
    @Override
    public void setValueAt(Object oValue, int rowIndex, int columnIndex)
    {
-      Book oBook = vBooks.get(rowIndex);
+      CFile oFile = vFiles.get(rowIndex);
       switch (columnIndex) 
       {
          case 2:
             if (oValue instanceof Integer) 
             {
-               oBook.setStatus((Integer) oValue);
+               oFile.setStatus((Integer) oValue);
             }
           break;
       }
    }
 
-   public void updateStatus(Book oBook, int progress) 
+   public void updateStatus(CFile oFile, int progress) 
    {
-      int i = vBooks.indexOf(oBook);
+      int i = vFiles.indexOf(oFile);
       if(i < 0)
          return;
-      Book rowData = vBooks.get(i);
+      CFile rowData = vFiles.get(i);
                
       if (rowData != null) 
       {
@@ -88,5 +90,8 @@ public class BookDownloadTableModel extends AbstractTableModel
           setValueAt(progress, i, 2);
           fireTableCellUpdated(i, 2);
       }
+      
+//      if(progress == 0)
+//         System.out.println(oBook.getName() + " :"+ progress);
   }      
 }

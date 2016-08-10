@@ -1,4 +1,4 @@
-package com.discworld.jdownloaderx;
+package com.discworld.jdownloaderx.dto;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -6,7 +6,7 @@ import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 
-class ClipboardListener extends Thread implements ClipboardOwner 
+public class ClipboardListener extends Thread implements ClipboardOwner 
 {
    private boolean bEnough=false;
    
@@ -26,17 +26,32 @@ class ClipboardListener extends Thread implements ClipboardOwner
       Transferable trans = sysClip.getContents(this);
       regainOwnership(trans);
 //      System.out.println("Listening to board...");
-      while(true) 
+      
+      synchronized(this) 
       {
-         if(isitEnough())
-            break;
-      }
+         while (true) 
+         {
+             try
+            {
+               this.wait();
+            } catch(InterruptedException e)
+            {
+               e.printStackTrace();
+            }
+         }
+      }      
+//      while(true) 
+//      {
+//         if(isitEnough())
+//            break;
+//      }
 //      System.out.println("No more Listening...");
    }
 
    public void itisEnough()
    {
       bEnough=true;
+      notify();
    }
    
    public void itisNotEnough()
